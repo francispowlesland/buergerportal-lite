@@ -1,16 +1,24 @@
 #!/usr/bin/env bash
-# Run Bob Shell once, read-only, and write its final message to a file.
-# Usage: run-bob.sh <input-file> <output-md> <max-cost> <max-turns>
+# Run Bob Shell once and write its final message to a file.
+# Usage: run-bob.sh <input-file> <output-md> <max-cost> <max-turns> [plan|implement]
 # Needs BOB_API_KEY in the environment.
+#   plan (default): read-only. Plan mode, no shell, no MCP, no subagents.
+#   implement:      agent mode with edit and shell, still no MCP or subagents.
+#                   Only for input a maintainer has approved.
 set -euo pipefail
 
-input=$1 out=$2 max_cost=$3 max_turns=$4
+input=$1 out=$2 max_cost=$3 max_turns=$4 kind=${5:-plan}
 raw=$(mktemp)
 
-# Plan mode, no shell, no MCP, no subagents: the issue text is untrusted
-# input and must not be able to make Bob run anything.
-bob run --accept-license --trust --mode plan --format json \
-  --disable-tool-groups execute,mcp --disable-subagents \
+case "$kind" in
+  # The issue text is untrusted input and must not be able to make Bob run anything.
+  plan) mode=plan disabled=execute,mcp ;;
+  implement) mode=agent disabled=mcp ;;
+  *) echo "::error::Unknown kind '$kind'"; exit 2 ;;
+esac
+
+bob run --accept-license --trust --mode "$mode" --format json \
+  --disable-tool-groups "$disabled" --disable-subagents \
   --max-cost "$max_cost" --max-turns "$max_turns" \
   < "$input" > "$raw"
 

@@ -1,0 +1,253 @@
+name: Bob implementation
+
+# A maintainer replies "/bob implement" under Bob's implementation plan. Bob
+# Shell then implements that plan in a fresh checkout, and a separate job puts
+# the result on a branch named after the issue and opens a pull request that
+# closes it.
+#
+# Trust model:
+#   * Only OWNER, MEMBER and COLLABORATOR comments start a run, and only on
+#     issues (not PRs). Bob is given the plan comment written by
+#     github-actions[bot], never the issue text or the reply itself.
+#   * A plan edited after the reply is refused, so the approval covers exactly
+#     the plan the maintainer saw.
+#   * Bob has a shell here, so the "implement" job has no write access and
+#     checks out with persist-credentials: false. It hands over a patch.
+#   * The job that pushes holds the write token but never runs Bob or any
+#     repository code; it only applies the patch, minus .github/ and .bob/.
+#   * Prompts and scripts always come from the default branch (./trusted).
+#
+# "issue_comment" workflows run from the default branch, so changes here only
+# take effect once merged.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: {}
+
+concurrency:
+  # Comments that are not "/bob implement" get their own group so they can never
+  # replace a queued implementation run.
+  group: bob-implement-${{ github.event.issue.number }}-${{ startsWith(github.event.comment.body, '/bob implement') && 'run' || github.run_id }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  # Bobcoin caps per Bob invocation. ponytail: guessed values, tune from real runs.
+  IMPLEMENT_MAX_COST: "300"
+  IMPLEMENT_MAX_TURNS: "150"
+  COMMENT_MARKER: "<!-- bob-implementation-plan -->"
+
+jobs:
+  implement:
+    name: Implement approved plan with Bob
+    if: >-
+      github.event.issue.pull_request == null &&
+      github.event.comment.user.type != 'Bot' &&
+      startsWith(github.event.comment.body, '/bob implement') &&
+      contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: read
+    env:
+      BOB_EVENTS_URL: ${{ vars.BOB_EVENTS_URL }}
+    outputs:
+      base: ${{ steps.plan.outputs.base }}
+    steps:
+      - name: Checkout trusted prompts (default branch)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: trusted
+          sparse-checkout: |
+            .github/bob
+            .bob/hooks
+            .bob/settings.json
+          persist-credentials: false
+
+      - name: Check trusted files
+        run: |
+          for f in run-bob.sh prompts/03-implement.md; do
+            [ -f "trusted/.github/bob/$f" ] || {
+              echo "::error::Default branch has no .github/bob/$f. Merge the PR that adds it, then comment again."
+              exit 1
+            }
+          done
+
+      - name: Find approved plan
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          APPROVED_AT: ${{ github.event.comment.created_at }}
+        run: |
+          # Latest plan comment by the Actions bot; the marker alone proves
+          # nothing because anyone can paste it.
+          plan=$(gh api --paginate "repos/$REPO/issues/$ISSUE_NUMBER/comments" |
+            jq -s --arg m "$COMMENT_MARKER" '
+              [.[][] | select(.user.login == "github-actions[bot]" and (.body | contains($m)))]
+              | last // empty')
+          [ -n "$plan" ] || { echo "::error::No Bob plan on this issue."; exit 1; }
+
+          # ISO 8601 timestamps of equal length compare correctly as strings.
+          updated=$(jq -r '.updated_at' <<<"$plan")
+          if [[ "$updated" > "$APPROVED_AT" ]]; then
+            echo "::error::The plan changed after the approval ($updated > $APPROVED_AT). Reply again."
+            exit 1
+          fi
+
+          body=$(jq -r '.body' <<<"$plan")
+
+          # The wrapper adds this marker only to plans that passed the structure
+          # check. Take the last one: the plan text itself is LLM output.
+          marker='^<!-- bob-base-branch=\([A-Za-z0-9._/-]*\) -->$'
+          if ! grep -q "$marker" <<<"$body"; then
+            echo "::error::The latest plan did not pass the structure check, so it cannot be implemented."
+            exit 1
+          fi
+          echo "base=$(sed -n "s|$marker|\1|p" <<<"$body" | tail -n1)" >> "$GITHUB_OUTPUT"
+
+          # What Bob gets: the plan only, without hidden HTML comments or our
+          # own delimiter, capped in length.
+          jq -rn --arg b "$body" '
+            $b | gsub("<!--[\\s\\S]*?-->"; "") | gsub("</?approved_plan>"; "") | .[0:60000]
+          ' > "$RUNNER_TEMP/plan.md"
+
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: code
+          # Empty means the default branch.
+          ref: ${{ steps.plan.outputs.base }}
+          persist-credentials: false
+
+      - name: Install Bob Shell
+        run: |
+          curl -fsSL https://bob.ibm.com/download/bobshell.sh \
+            --output "$RUNNER_TEMP/bobshell.sh"
+          bash "$RUNNER_TEMP/bobshell.sh" --package-manager npm
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Sync trusted Bob configuration
+        run: |
+          mkdir -p code/.bob/hooks
+          if [ -d trusted/.bob/hooks ]; then
+            cp -r trusted/.bob/hooks/* code/.bob/hooks/ || true
+          fi
+          if [ -f trusted/.bob/settings.json ]; then
+            cp trusted/.bob/settings.json code/.bob/settings.json
+          fi
+
+      - name: Implement plan
+        env:
+          BOB_API_KEY: ${{ secrets.BOB_API_KEY }}
+          GIT_ORG: ${{ github.repository_owner }}
+          GIT_REPO: ${{ github.event.repository.name }}
+          GIT_ISSUE_NUMBER: ${{ github.event.issue.number }}
+        working-directory: code
+        run: |
+          git rev-parse HEAD > "$RUNNER_TEMP/base-sha.txt"
+          {
+            cat ../trusted/.github/bob/prompts/03-implement.md
+            echo
+            echo "<approved_plan>"
+            cat "$RUNNER_TEMP/plan.md"
+            echo "</approved_plan>"
+          } > "$RUNNER_TEMP/implement-prompt.txt"
+          bash ../trusted/.github/bob/run-bob.sh \
+            "$RUNNER_TEMP/implement-prompt.txt" "$RUNNER_TEMP/summary.md" \
+            "$IMPLEMENT_MAX_COST" "$IMPLEMENT_MAX_TURNS" implement
+
+      - name: Collect changes
+        working-directory: code
+        run: |
+          mkdir -p ../out
+          # Diff against the commit Bob started from, in case it committed.
+          # No external diff or textconv: .git/config was writable by Bob.
+          git add -A -- . ':(exclude).github' ':(exclude).bob'
+          git diff --cached --binary --no-ext-diff --no-textconv \
+            "$(cat "$RUNNER_TEMP/base-sha.txt")" > ../out/changes.patch
+          [ -s ../out/changes.patch ] || { echo "::error::Bob made no changes."; exit 1; }
+          size=$(wc -c < ../out/changes.patch)
+          [ "$size" -le 5000000 ] || { echo "::error::Patch too large: $size bytes."; exit 1; }
+          cp "$RUNNER_TEMP/summary.md" ../out/summary.md
+
+      - name: Upload changes
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: bob-implementation
+          path: out
+          if-no-files-found: error
+          retention-days: 7
+
+  pull-request:
+    name: Open pull request
+    needs: implement
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    # No Bob, no API key, no repository code is run here: this job only applies
+    # the patch and talks to GitHub.
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout base branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ needs.implement.outputs.base }}
+          # The push below needs the token; nothing here runs repository code.
+          persist-credentials: true
+
+      - name: Download changes
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: bob-implementation
+          path: ${{ runner.temp }}/bob-out
+
+      - name: Commit, push and open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          BASE: ${{ needs.implement.outputs.base || github.event.repository.default_branch }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          APPROVER: ${{ github.event.comment.user.login }}
+        run: |
+          out="$RUNNER_TEMP/bob-out"
+          branch="bob/issue-$ISSUE_NUMBER-$RUN_ID"
+
+          # Titles are untrusted text: used as data only, never expanded in a command.
+          title=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json title --jq '.title' | tr -d '\r\n' | cut -c1-120)
+
+          git apply --exclude='.github/*' --exclude='.bob/*' "$out/changes.patch"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add -A
+          git commit --quiet -m "Implement #$ISSUE_NUMBER: $title" \
+            -m "Implemented by Bob from the approved plan on #$ISSUE_NUMBER." \
+            -m "Refs #$ISSUE_NUMBER"
+          git push origin "$branch"
+
+          {
+            echo "Closes #$ISSUE_NUMBER"
+            echo
+            head -c 10000 "$out/summary.md"
+            echo
+            echo
+            echo "---"
+            echo "_Implemented by Bob from the plan on #$ISSUE_NUMBER, approved by @$APPROVER. AI-generated: review it like any other change. [Run log]($RUN_URL)_"
+          } > "$RUNNER_TEMP/pr-body.md"
+
+          pr_url=$(gh pr create --repo "$REPO" --base "$BASE" --head "$branch" \
+            --title "Implement #$ISSUE_NUMBER: $title" --body-file "$RUNNER_TEMP/pr-body.md")
+          gh issue comment "$ISSUE_NUMBER" --repo "$REPO" \
+            --body "Bob opened $pr_url from the approved plan."
