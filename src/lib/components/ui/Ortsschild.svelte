@@ -1,5 +1,5 @@
 <script lang="ts">
-	/** The Musterstadt town sign. Yellow plate, black frame, like the real Ortstafel. */
+	/** The Musterstadt town sign. Blue plate, white frame, like a German place sign. */
 	let { size = 'md' }: { size?: 'md' | 'lg' } = $props();
 </script>
 
