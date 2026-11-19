@@ -7,3 +7,10 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Imported agent tooling, including documentation with deliberately invalid code examples
+/.agents/
+/.bob/
+/.github/bob/
+/.github/workflows/bob-*
+/skills-lock.json

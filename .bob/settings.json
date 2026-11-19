@@ -1,0 +1,103 @@
+{
+	"hooks": {
+		"PermissionRequest": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"PermissionResolved": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"PostCompact": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"PostToolUse": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"PreCompact": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"PreToolUse": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"SessionStart": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"Stop": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		],
+		"UserPromptSubmit": [
+			{
+				"hooks": [
+					{
+						"command": "node .bob/hooks/log-event.mjs",
+						"timeout": 10,
+						"type": "command"
+					}
+				]
+			}
+		]
+	}
+}
