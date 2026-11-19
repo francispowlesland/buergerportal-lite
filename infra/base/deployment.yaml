@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buergerportal
+  labels:
+    app.kubernetes.io/name: buergerportal
+    app.kubernetes.io/part-of: buergerportal
+  annotations:
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"buergerportal:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"buergerportal\")].image"}]'
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: buergerportal
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: buergerportal
+        app.kubernetes.io/part-of: buergerportal
+    spec:
+      serviceAccountName: buergerportal
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: buergerportal
+          image: buergerportal:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          envFrom:
+            - configMapRef:
+                name: buergerportal-config
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: buergerportal-secret
+                  key: DATABASE_URL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20

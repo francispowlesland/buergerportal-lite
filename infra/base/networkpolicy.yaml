@@ -1,0 +1,51 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: buergerportal-ingress
+  labels:
+    app.kubernetes.io/name: buergerportal
+    app.kubernetes.io/part-of: buergerportal
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: buergerportal
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow OpenShift Router
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              network.openshift.io/policy-group: ingress
+      ports:
+        - protocol: TCP
+          port: 8080
+    # Allow traffic within the namespace
+    - from:
+        - podSelector: {}
+      ports:
+        - protocol: TCP
+          port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: buergerportal-db-ingress
+  labels:
+    app.kubernetes.io/name: buergerportal-db
+    app.kubernetes.io/part-of: buergerportal
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: buergerportal-db
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow app pods in same namespace to connect to DB
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: buergerportal
+      ports:
+        - protocol: TCP
+          port: 5432

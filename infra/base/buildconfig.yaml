@@ -1,0 +1,34 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: buergerportal
+  labels:
+    app.kubernetes.io/name: buergerportal
+    app.kubernetes.io/part-of: buergerportal
+spec:
+  runPolicy: Serial
+  successfulBuildsHistoryLimit: 3
+  failedBuildsHistoryLimit: 3
+  source:
+    type: Git
+    git:
+      uri: https://github.com/example/buergerportal-lite.git
+      ref: main
+    contextDir: /
+  strategy:
+    type: Docker
+    dockerStrategy:
+      dockerfilePath: infra/Containerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: buergerportal:latest
+  resources:
+    requests:
+      cpu: 500m
+      memory: 1Gi
+    limits:
+      memory: 2Gi
+  triggers:
+    - type: ConfigChange
+    - type: ImageChange

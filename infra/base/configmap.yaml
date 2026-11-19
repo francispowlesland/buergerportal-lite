@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: buergerportal-config
+  labels:
+    app.kubernetes.io/name: buergerportal
+    app.kubernetes.io/part-of: buergerportal
+data:
+  PORT: '8080'
+  HOST: '0.0.0.0'
+  NODE_ENV: 'production'
+  BODY_SIZE_LIMIT: '32M'

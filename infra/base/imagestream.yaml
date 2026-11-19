@@ -1,0 +1,10 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: buergerportal
+  labels:
+    app.kubernetes.io/name: buergerportal
+    app.kubernetes.io/part-of: buergerportal
+spec:
+  lookupPolicy:
+    local: true
