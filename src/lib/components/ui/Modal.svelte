@@ -30,7 +30,7 @@
 	onclick={(e) => {
 		if (e.target === dialog) dialog?.close();
 	}}
-	class="m-auto w-[min(34rem,calc(100vw-2rem))] border-2 border-ink bg-sheet p-0 text-ink backdrop:bg-ink/60"
+	class="m-auto w-[min(34rem,calc(100vw-2rem))] border-2 border-ink bg-sheet p-0 text-ink backdrop:bg-scrim/60"
 >
 	<div class="panel-head">
 		<h2 id={titleId} class="!text-base !font-bold text-white">{title}</h2>

@@ -11,6 +11,7 @@
 				var p = JSON.parse(localStorage.getItem('bp-a11y') || '{}');
 				if (p.contrast) document.documentElement.dataset.contrast = 'high';
 				if (p.leicht) document.documentElement.dataset.leicht = 'on';
+				if (p.dark === true) document.documentElement.dataset.theme = 'dark';
 			} catch (e) {}
 		</script>
 		%sveltekit.head%

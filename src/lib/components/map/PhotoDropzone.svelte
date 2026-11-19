@@ -100,11 +100,7 @@
 					<p class="text-xs text-status-800">Dateiname vorgemerkt (Demo)</p>
 				</div>
 			</div>
-			<button
-				type="button"
-				class="btn btn-ghost btn-sm text-signal-600 hover:text-signal-800"
-				onclick={removePhoto}
-			>
+			<button type="button" class="btn btn-ghost btn-sm text-signal-800" onclick={removePhoto}>
 				Entfernen
 			</button>
 		</div>

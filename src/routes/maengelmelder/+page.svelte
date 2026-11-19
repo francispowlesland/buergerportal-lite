@@ -108,7 +108,7 @@
 				href={updateFilter('view', 'map')}
 				class="flex items-center gap-1.5 px-3 py-1 text-sm font-bold no-underline {data.view ===
 				'map'
-					? 'bg-ink text-white'
+					? 'bg-ink text-paper'
 					: 'text-ink hover:bg-amt-50'}"
 				aria-current={data.view === 'map' ? 'page' : undefined}
 			>
@@ -132,7 +132,7 @@
 				href={updateFilter('view', 'list')}
 				class="flex items-center gap-1.5 px-3 py-1 text-sm font-bold no-underline {data.view ===
 				'list'
-					? 'bg-ink text-white'
+					? 'bg-ink text-paper'
 					: 'text-ink hover:bg-amt-50'}"
 				aria-current={data.view === 'list' ? 'page' : undefined}
 			>
@@ -161,7 +161,7 @@
 		<a
 			href={updateFilter('category', null)}
 			class="border px-2 py-1 text-xs font-bold no-underline {data.selectedCategory === null
-				? 'border-ink bg-ink text-white'
+				? 'border-ink bg-ink text-paper'
 				: 'border-rule bg-sheet text-ink hover:border-ink'}"
 			aria-current={data.selectedCategory === null ? 'page' : undefined}
 		>
@@ -171,7 +171,7 @@
 			<a
 				href={updateFilter('category', cat.key)}
 				class="border px-2 py-1 text-xs font-bold no-underline {data.selectedCategory === cat.key
-					? 'border-ink bg-ink text-white'
+					? 'border-ink bg-ink text-paper'
 					: 'border-rule bg-sheet text-ink hover:border-ink'}"
 				aria-current={data.selectedCategory === cat.key ? 'page' : undefined}
 			>

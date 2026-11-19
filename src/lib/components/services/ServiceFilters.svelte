@@ -111,7 +111,7 @@
 					value={lebenslage === l.key ? '' : l.key}
 					aria-pressed={lebenslage === l.key}
 					onclick={(event) => pick(event, l.key)}
-					class="min-h-11 border-2 border-ink bg-sheet px-3 font-bold hover:bg-amt-50 aria-pressed:border-amt-700 aria-pressed:bg-amt-700 aria-pressed:text-white"
+					class="min-h-11 border-2 border-ink bg-sheet px-3 font-bold hover:bg-amt-50 aria-pressed:border-amt-700 aria-pressed:bg-amt-700 aria-pressed:text-paper"
 				>
 					{l.label}
 				</button>

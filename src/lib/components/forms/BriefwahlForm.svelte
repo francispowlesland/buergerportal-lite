@@ -84,7 +84,7 @@
 						<span class="block text-[10px] font-bold text-amt-700 uppercase">
 							Wählerverzeichnis-Nr.
 						</span>
-						<span class="font-display font-bold tracking-wider text-amt-900">
+						<span class="font-display font-bold tracking-wider text-ink">
 							{data.wahlbenachrichtigungsnummer || 'WB-07-004711'}
 						</span>
 					</div>

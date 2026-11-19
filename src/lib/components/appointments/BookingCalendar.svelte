@@ -67,7 +67,7 @@
 									<a
 										href={resolve(cell.href)}
 										class="flex min-h-14 flex-col items-center justify-center font-bold hover:bg-amt-100 {cell.selected
-											? 'bg-amt-700 text-white hover:bg-amt-900'
+											? 'bg-amt-700 text-paper hover:bg-amt-900 hover:text-white'
 											: 'bg-amt-50'}"
 										aria-current={cell.selected ? 'date' : undefined}
 										aria-label="{cell.date}: {cell.free} freie Termine{cell.today ? ', heute' : ''}"

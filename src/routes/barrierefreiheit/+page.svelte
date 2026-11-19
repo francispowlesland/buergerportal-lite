@@ -20,6 +20,7 @@
 			<strong>Leichte Sprache:</strong> größere Schrift, mehr Zeilenabstand und einfachere Texte, wo vorhanden.
 		</li>
 		<li><strong>Hoher Kontrast:</strong> schwarze Schrift auf weißem Grund, kräftige Rahmen.</li>
+		<li><strong>Dunkler Modus:</strong> helle Schrift auf dunklem Grund. Der Druck bleibt hell.</li>
 	</ul>
 	<h2>Barriere gefunden?</h2>
 	<p>

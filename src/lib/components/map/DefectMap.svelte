@@ -245,17 +245,17 @@
 			>
 				<!-- Pin badge -->
 				<div
-					class="flex items-center gap-1.5 border-2 px-2 py-1 font-display text-xs font-black shadow-none transition-transform group-hover:scale-110 group-focus-visible:ring-4 group-focus-visible:ring-amt-700 {colors.bg} {colors.border} {colors.text} {isSelected
-						? 'scale-115 ring-2 ring-ink ring-offset-2'
+					class="flex items-center gap-1.5 border-2 px-2 py-1 font-display text-xs font-black shadow-none transition-transform group-hover:scale-110 group-focus-visible:ring-4 group-focus-visible:ring-[#00467f] {colors.bg} {colors.border} {colors.text} {isSelected
+						? 'scale-115 ring-2 ring-[#14212c] ring-offset-2'
 						: ''}"
 					style="border-radius: 2px;"
 				>
 					<span
 						class="inline-block h-2 w-2 rounded-full {pin.status === 'behoben'
-							? 'bg-status-800'
+							? 'bg-[#115630]'
 							: pin.status === 'in_bearbeitung'
-								? 'bg-amt-700'
-								: 'bg-warn-700'}"
+								? 'bg-[#00467f]'
+								: 'bg-[#8a4f00]'}"
 						aria-hidden="true"
 					></span>
 					<span class="aktenzeichen">{pin.reference}</span>

@@ -94,7 +94,7 @@
 		<!-- 1. Kategorie -->
 		<fieldset class="space-y-3">
 			<legend class="field-label text-base">
-				1. Art des Mangels (Kategorie) <span class="text-signal-600" aria-hidden="true">*</span>
+				1. Art des Mangels (Kategorie) <span class="text-signal-800" aria-hidden="true">*</span>
 			</legend>
 			<p class="field-hint" id="category-hint">
 				Wählen Sie die passende Kategorie für Ihre Meldung aus.
@@ -136,7 +136,7 @@
 
 			<div>
 				<label for="title-input" class="field-label">
-					Kurztitel <span class="text-signal-600" aria-hidden="true">*</span>
+					Kurztitel <span class="text-signal-800" aria-hidden="true">*</span>
 				</label>
 				<p class="field-hint" id="title-hint">
 					z.B. „Tiefes Schlagloch vor Hausnummer 12“ oder „Laterne flackert“
@@ -159,7 +159,7 @@
 
 			<div>
 				<label for="description-input" class="field-label">
-					Genaue Beschreibung <span class="text-signal-600" aria-hidden="true">*</span>
+					Genaue Beschreibung <span class="text-signal-800" aria-hidden="true">*</span>
 				</label>
 				<p class="field-hint" id="description-hint">
 					Beschreiben Sie den Schaden, das Ausmaß und mögliche Gefahrenstellen möglichst präzise.
@@ -186,7 +186,7 @@
 
 			<div>
 				<label for="address-input" class="field-label">
-					Adresse oder Ortsbeschreibung <span class="text-signal-600" aria-hidden="true">*</span>
+					Adresse oder Ortsbeschreibung <span class="text-signal-800" aria-hidden="true">*</span>
 				</label>
 				<p class="field-hint" id="address-hint">
 					Straße, Hausnummer oder markanter Ortspunkt (z.B. „Parkallee Höhe Spielplatz“)

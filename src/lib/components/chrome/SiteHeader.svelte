@@ -59,6 +59,14 @@
 			>
 				Hoher Kontrast {a11y.contrast ? 'aus' : 'an'}
 			</button>
+			<button
+				type="button"
+				class="min-h-11 font-bold underline decoration-1 underline-offset-4"
+				aria-pressed={a11y.dark}
+				onclick={() => a11y.toggleDark()}
+			>
+				Dunkler Modus {a11y.dark ? 'aus' : 'an'}
+			</button>
 			<a href={resolve('/dienste')} class="min-h-11 py-1 font-bold">Suche</a>
 		</div>
 	</div>

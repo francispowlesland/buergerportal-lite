@@ -11,7 +11,7 @@
 			{#if slot.free}
 				<label
 					for="{id}-{slot.time}"
-					class="flex min-h-11 cursor-pointer items-center gap-2 border border-amt-700 bg-amt-50 px-3 py-2 font-bold has-checked:bg-amt-700 has-checked:text-white"
+					class="flex min-h-11 cursor-pointer items-center gap-2 border border-amt-700 bg-amt-50 px-3 py-2 font-bold has-checked:bg-amt-700 has-checked:text-paper"
 				>
 					<input id="{id}-{slot.time}" type="radio" name="zeit" value={slot.time} required />
 					{slot.time} Uhr

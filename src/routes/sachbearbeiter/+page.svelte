@@ -61,7 +61,7 @@
 						<a
 							href={item.href}
 							class="font-display text-4xl font-bold no-underline hover:underline {item.alert
-								? 'text-signal-600'
+								? 'text-signal-800'
 								: 'text-ink'}"
 						>
 							{item.value}

@@ -103,7 +103,7 @@
 		type="button"
 		aria-labelledby="map-picker-heading"
 		aria-describedby="map-picker-hint map-coords-live"
-		class="relative block w-full cursor-crosshair overflow-hidden border-2 border-ink bg-[#e6ede9] p-0 text-left select-none focus:ring-4 focus:ring-amt-700 focus:outline-none"
+		class="relative block w-full cursor-crosshair overflow-hidden border-2 border-ink bg-[#e6ede9] p-0 text-left select-none focus:ring-4 focus:ring-[#00467f] focus:outline-none"
 		style="aspect-ratio: 16/9; min-height: 280px;"
 		onclick={handleMapClick}
 		onkeydown={handleMapKeyDown}
@@ -226,7 +226,7 @@
 				</div>
 				<!-- Pin label -->
 				<span
-					class="absolute top-9 border border-ink bg-ink px-1.5 py-0.5 font-display text-[11px] font-bold whitespace-nowrap text-white shadow"
+					class="absolute top-9 border border-[#14212c] bg-[#14212c] px-1.5 py-0.5 font-display text-[11px] font-bold whitespace-nowrap text-white shadow"
 				>
 					Schadensort
 				</span>

@@ -130,7 +130,7 @@
 						{#if onDelete}
 							<button
 								type="button"
-								class="btn btn-ghost btn-sm text-signal-600 hover:text-signal-800"
+								class="btn btn-ghost btn-sm text-signal-800"
 								onclick={() => onDelete(att.id)}
 							>
 								Entfernen

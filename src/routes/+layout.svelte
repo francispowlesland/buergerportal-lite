@@ -21,7 +21,7 @@
 
 <a
 	href="#inhalt"
-	class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-ortsschild focus:p-3 focus:font-bold focus:text-ink"
+	class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-ortsschild focus:p-3 focus:font-bold focus:text-ortsschild-ink"
 >
 	Zum Inhalt springen
 </a>
