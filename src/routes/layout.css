@@ -1,3 +1,364 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+@import '@fontsource-variable/atkinson-hyperlegible-next';
+@import '@fontsource-variable/archivo/wdth.css';
+@import '@fontsource-variable/source-serif-4';
+
+/*
+ * Design language: "Amtsformular".
+ * Cool, grey-green Aktenpapier; ink-dark outlines like printed form boxes; no shadows,
+ * no gradients. Amt-Blau carries structure, Signal-Rot only means "act now / problem",
+ * Status-Grün only means "done". The one loud thing is the Ortsschild-Gelb town sign.
+ */
+@theme {
+	--font-sans: 'Atkinson Hyperlegible Next Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-display:
+		'Archivo Variable', 'Atkinson Hyperlegible Next Variable', ui-sans-serif, sans-serif;
+	--font-serif: 'Source Serif 4 Variable', ui-serif, Georgia, serif;
+
+	--color-paper: #edf0ee;
+	--color-sheet: #fbfcfb;
+	--color-ink: #14212c;
+	--color-ink-soft: #4a5966;
+	--color-rule: #b9c3c0;
+
+	--color-amt-50: #eaf1f8;
+	--color-amt-100: #d3e3f2;
+	--color-amt-300: #7fa9d0;
+	--color-amt-500: #1f6bb0;
+	--color-amt-700: #00467f;
+	--color-amt-900: #002a4d;
+
+	--color-signal-50: #fbe9ec;
+	--color-signal-600: #c4122f;
+	--color-signal-800: #8e0d22;
+
+	--color-status-50: #def0e5;
+	--color-status-600: #1b7a43;
+	--color-status-800: #115630;
+
+	--color-warn-50: #fbebcb;
+	--color-warn-700: #8a4f00;
+
+	--color-ortsschild: #f5c400;
+
+	--radius-form: 2px;
+}
+
+@layer base {
+	html {
+		background: var(--color-paper);
+		color: var(--color-ink);
+		font-family: var(--font-sans);
+		font-size: 100%;
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+		scroll-padding-top: 6rem;
+	}
+
+	h1,
+	h2,
+	h3,
+	h4 {
+		font-family: var(--font-display);
+		font-stretch: 112%;
+		font-weight: 760;
+		letter-spacing: -0.012em;
+		line-height: 1.12;
+		text-wrap: balance;
+	}
+
+	h1 {
+		font-size: clamp(2rem, 1.4rem + 2.4vw, 3.25rem);
+	}
+	h2 {
+		font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+	}
+	h3 {
+		font-size: 1.25rem;
+		font-stretch: 105%;
+		font-weight: 700;
+	}
+	h4 {
+		font-size: 1.0625rem;
+		font-stretch: 100%;
+		font-weight: 700;
+	}
+
+	p {
+		text-wrap: pretty;
+	}
+
+	a {
+		color: var(--color-amt-700);
+		text-decoration-thickness: 1px;
+		text-underline-offset: 0.2em;
+	}
+	a:hover {
+		text-decoration-thickness: 2px;
+	}
+
+	:focus-visible {
+		outline: 3px solid var(--color-amt-700);
+		outline-offset: 2px;
+		box-shadow: 0 0 0 2px var(--color-sheet);
+	}
+
+	::selection {
+		background: var(--color-ortsschild);
+		color: var(--color-ink);
+	}
+
+	/* Hoher Kontrast: schwarz auf weiß, kräftige Ränder. */
+	html[data-contrast='high'] {
+		--color-paper: #ffffff;
+		--color-sheet: #ffffff;
+		--color-ink: #000000;
+		--color-ink-soft: #1a1a1a;
+		--color-rule: #000000;
+		--color-amt-700: #002a6b;
+		--color-amt-500: #002a6b;
+	}
+
+	/* Leichte Sprache: größere Schrift, mehr Zeilenabstand. */
+	html[data-leicht='on'] {
+		font-size: 112.5%;
+		line-height: 1.8;
+	}
+	html[data-leicht='on'] p {
+		max-width: 52ch;
+	}
+}
+
+@layer components {
+	/* ── Formular-Panel: outlined sheet, the basic container. ── */
+	.panel {
+		background: var(--color-sheet);
+		border: 1px solid var(--color-ink);
+		border-radius: var(--radius-form);
+	}
+	.panel-quiet {
+		background: var(--color-sheet);
+		border: 1px solid var(--color-rule);
+		border-radius: var(--radius-form);
+	}
+	/* Panel head strip: like the printed header of a form block. */
+	.panel-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		padding: 0.5rem 1rem;
+		background: var(--color-amt-900);
+		color: #fff;
+		font-family: var(--font-display);
+		font-stretch: 108%;
+		font-weight: 700;
+		font-size: 0.9375rem;
+	}
+
+	/* ── Buttons ── */
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		min-height: 2.75rem;
+		padding: 0.5rem 1.125rem;
+		border: 2px solid var(--color-ink);
+		border-radius: var(--radius-form);
+		background: var(--color-sheet);
+		color: var(--color-ink);
+		font-weight: 700;
+		line-height: 1.2;
+		text-decoration: none;
+		cursor: pointer;
+		transition:
+			background-color 120ms,
+			color 120ms;
+	}
+	.btn:hover {
+		background: var(--color-amt-50);
+		text-decoration: none;
+	}
+	.btn-primary {
+		background: var(--color-amt-700);
+		border-color: var(--color-amt-700);
+		color: #fff;
+	}
+	.btn-primary:hover {
+		background: var(--color-amt-900);
+		border-color: var(--color-amt-900);
+	}
+	.btn-danger {
+		background: var(--color-signal-600);
+		border-color: var(--color-signal-600);
+		color: #fff;
+	}
+	.btn-danger:hover {
+		background: var(--color-signal-800);
+		border-color: var(--color-signal-800);
+	}
+	.btn-ghost {
+		border-color: transparent;
+		background: transparent;
+		color: var(--color-amt-700);
+		text-decoration: underline;
+	}
+	.btn[disabled],
+	.btn[aria-disabled='true'] {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	.btn-sm {
+		min-height: 2.25rem;
+		padding: 0.25rem 0.75rem;
+		font-size: 0.9375rem;
+	}
+
+	/* ── Form fields ── */
+	.field-label {
+		display: block;
+		margin-bottom: 0.25rem;
+		font-weight: 700;
+		font-size: 0.9375rem;
+	}
+	.field-hint {
+		display: block;
+		margin-bottom: 0.375rem;
+		color: var(--color-ink-soft);
+		font-size: 0.875rem;
+	}
+	.field-error {
+		margin-top: 0.25rem;
+		color: var(--color-signal-800);
+		font-weight: 700;
+		font-size: 0.9375rem;
+	}
+	.input,
+	input[type='text'],
+	input[type='password'],
+	input[type='email'],
+	input[type='tel'],
+	input[type='date'],
+	input[type='search'],
+	input[type='number'],
+	select,
+	textarea {
+		width: 100%;
+		min-height: 2.75rem;
+		padding: 0.5rem 0.75rem;
+		border: 2px solid var(--color-ink);
+		border-radius: var(--radius-form);
+		background: var(--color-sheet);
+		color: var(--color-ink);
+	}
+	input[type='checkbox'],
+	input[type='radio'] {
+		width: 1.25rem;
+		height: 1.25rem;
+		border: 2px solid var(--color-ink);
+		color: var(--color-amt-700);
+	}
+	input[type='radio'] {
+		border-radius: 9999px;
+	}
+	.input[aria-invalid='true'],
+	input[aria-invalid='true'],
+	select[aria-invalid='true'],
+	textarea[aria-invalid='true'] {
+		border-color: var(--color-signal-600);
+		background: var(--color-signal-50);
+	}
+	input:focus,
+	select:focus,
+	textarea:focus {
+		--tw-ring-shadow: 0 0 #0000;
+		border-color: var(--color-amt-700);
+	}
+
+	/* ── Stempel: status badges look like office rubber stamps. ── */
+	.stempel {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.375rem;
+		padding: 0.125rem 0.5rem;
+		border: 2px solid currentColor;
+		border-radius: var(--radius-form);
+		font-family: var(--font-display);
+		font-stretch: 100%;
+		font-weight: 800;
+		font-size: 0.8125rem;
+		line-height: 1.4;
+		white-space: nowrap;
+	}
+	.stempel-neutral {
+		color: var(--color-ink-soft);
+	}
+	.stempel-info {
+		color: var(--color-amt-700);
+		background: var(--color-amt-50);
+	}
+	.stempel-ok {
+		color: var(--color-status-800);
+		background: var(--color-status-50);
+	}
+	.stempel-warn {
+		color: var(--color-warn-700);
+		background: var(--color-warn-50);
+	}
+	.stempel-bad {
+		color: var(--color-signal-800);
+		background: var(--color-signal-50);
+	}
+
+	/* ── Aktenzeichen: monospaced-ish reference numbers. ── */
+	.aktenzeichen {
+		font-variant-numeric: tabular-nums;
+		letter-spacing: 0.02em;
+		font-weight: 700;
+	}
+
+	/* ── Ortsschild: the town-sign mark. ── */
+	.ortsschild {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: flex-start;
+		padding: 0.25rem 0.75rem 0.3rem;
+		background: var(--color-ortsschild);
+		color: #111;
+		border: 3px solid #111;
+		border-radius: 6px;
+		outline: 2px solid var(--color-ortsschild);
+		font-family: var(--font-display);
+		font-stretch: 100%;
+		line-height: 1;
+	}
+
+	.visually-hidden {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+@media print {
+	.no-print {
+		display: none !important;
+	}
+}

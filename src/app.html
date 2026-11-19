@@ -1,9 +1,18 @@
 <!doctype html>
-<html lang="en">
+<html lang="de">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="text-scale" content="scale" />
+		<meta name="color-scheme" content="light" />
+		<script>
+			// Restore accessibility preferences before first paint (no flash).
+			try {
+				var p = JSON.parse(localStorage.getItem('bp-a11y') || '{}');
+				if (p.contrast) document.documentElement.dataset.contrast = 'high';
+				if (p.leicht) document.documentElement.dataset.leicht = 'on';
+			} catch (e) {}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
