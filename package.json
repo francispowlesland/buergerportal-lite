@@ -15,17 +15,27 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"db:up": "podman compose up -d --wait",
+		"db:down": "podman compose down",
+		"db:push": "node --env-file=.env ./node_modules/drizzle-kit/bin.cjs push --force",
+		"db:seed": "tsx --env-file=.env src/lib/server/db/seed/index.ts",
+		"db:setup": "npm run db:up && npm run db:push && npm run db:seed"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
-		"@sveltejs/adapter-auto": "^8.0.1",
+		"@fontsource-variable/archivo": "^5.3.0",
+		"@fontsource-variable/atkinson-hyperlegible-next": "^5.3.0",
+		"@fontsource-variable/source-serif-4": "^5.3.1",
+		"@sveltejs/adapter-node": "^6.0.5",
 		"@sveltejs/kit": "^3.2.0",
 		"@sveltejs/vite-plugin-svelte": "^7.3.1",
 		"@tailwindcss/forms": "^0.5.11",
 		"@tailwindcss/typography": "^0.5.20",
 		"@tailwindcss/vite": "^4.3.5",
 		"@types/node": "^24",
+		"@types/qrcode": "^1.5.6",
+		"drizzle-kit": "^0.31.11",
 		"eslint": "^10.15.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.24.1",
@@ -36,8 +46,14 @@
 		"svelte": "^5.57.3",
 		"svelte-check": "^4.7.8",
 		"tailwindcss": "^4.3.5",
+		"tsx": "^4.23.15",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.72.2",
 		"vite": "^8.3.8"
+	},
+	"dependencies": {
+		"drizzle-orm": "^0.45.4",
+		"postgres": "^4.1.1",
+		"qrcode": "^1.5.4"
 	}
 }
