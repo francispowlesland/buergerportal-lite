@@ -10,7 +10,8 @@
  * Design language: "Amtsformular".
  * Cool, grey-green Aktenpapier; ink-dark outlines like printed form boxes; no shadows,
  * no gradients. Amt-Blau carries structure, Signal-Rot only means "act now / problem",
- * Status-Grün only means "done". The one loud thing is the Ortsschild-Gelb town sign.
+ * Status-Grün only means "done". The one loud thing is the blue Ortsschild town sign; the
+ * Ortsschild-Gelb token is kept for the selection highlight, skip link and persona bar.
  */
 @theme {
 	--font-sans: 'Atkinson Hyperlegible Next Variable', ui-sans-serif, system-ui, sans-serif;
@@ -327,11 +328,11 @@
 		flex-direction: column;
 		align-items: flex-start;
 		padding: 0.25rem 0.75rem 0.3rem;
-		background: var(--color-ortsschild);
-		color: #111;
-		border: 3px solid #111;
+		background: var(--color-amt-700);
+		color: #fff;
+		border: 3px solid #fff;
 		border-radius: 6px;
-		outline: 2px solid var(--color-ortsschild);
+		outline: 2px solid var(--color-amt-700);
 		font-family: var(--font-display);
 		font-stretch: 100%;
 		line-height: 1;
