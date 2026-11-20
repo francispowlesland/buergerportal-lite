@@ -13,6 +13,10 @@
 			<p class="mt-4 max-w-sm text-sm text-white/75">
 				Dies ist ein Demonstrator. Musterstadt, alle Personen und alle Vorgänge sind frei erfunden.
 			</p>
+			<p class="mt-2 max-w-sm text-sm text-white/75">
+				Diese Demo wurde extra für den govdigital Technologie Austausch mit IBM am 20.11.2026
+				entworfen.
+			</p>
 		</div>
 		<nav aria-label="Service">
 			<p class="font-bold">Service</p>
